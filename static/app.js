@@ -182,13 +182,97 @@ function changeTimeZone() {
     // Draw analog clock for the additional clock
     var additionalCurrentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
     drawAnalogClock(moment.tz(additionalCurrentTime, selectedTimeZone), 'additional-clock-canvas');
+    updateAdditionalClocks();
 }
 
 // Function to create an additional clock for a specific time zone
-function createTimeZoneClock(timeZone) {
+function createTimeZoneClock(timeZone, index) {
     var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
-    document.getElementById('additional-clock').innerHTML = `Time in ${timeZone}: ${currentTime}`;
-    drawAnalogClock(moment.tz(currentTime, timeZone), 'additional-clock-canvas');
+    
+    // Display the time in the additional clock section
+    var additionalClockContainer = document.getElementById('additional-clocks');
+    var additionalClockDiv = document.createElement('div');
+    additionalClockDiv.className = 'additional-clock-item';
+    additionalClockDiv.innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime;
+    
+    // Create a canvas for the additional clock
+    var canvasId = 'additional-clock-canvas-' + index;
+    var canvas = document.createElement('canvas');
+    canvas.id = canvasId;
+    canvas.width = 200;
+    canvas.height = 200;
+    
+    additionalClockDiv.appendChild(canvas);
+    additionalClockContainer.appendChild(additionalClockDiv);
+    
+    // Draw the analog clock for the additional time zone
+    drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), canvasId);
+}
+
+function updateAdditionalClocks() {
+    var selectedTimeZones = document.getElementById('additional-timezone-list').getElementsByTagName('li');
+
+    for (var i = 0; i < selectedTimeZones.length; i++) {
+        var timeZone = selectedTimeZones[i].getAttribute('data-timezone');
+        var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
+        
+        // Update the time in the additional clock section
+        selectedTimeZones[i].innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime;
+        
+        // Draw the analog clock for the additional time zone
+        drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), 'additional-clock-canvas-' + i);
+    }
+}
+
+
+function addSelectedTimeZone() {
+    var selectedTimeZone = document.getElementById('timezone').value;
+
+    // Check if the time zone is already added
+    var existingTimeZones = document.getElementById('additional-timezone-list').getElementsByTagName('li');
+    for (var i = 0; i < existingTimeZones.length; i++) {
+        if (existingTimeZones[i].getAttribute('data-timezone') === selectedTimeZone) {
+            alert('This time zone is already added.');
+            return;
+        }
+    }
+
+    // Create a new list item for the added time zone
+    var listItem = document.createElement('li');
+    listItem.setAttribute('data-timezone', selectedTimeZone);
+    listItem.className = 'list-group-item';
+
+    // Add a button to remove the time zone
+    var removeButton = document.createElement('button');
+    removeButton.className = 'btn btn-danger btn-sm float-right';
+    removeButton.innerHTML = 'Remove';
+    removeButton.addEventListener('click', function() {
+        listItem.remove();
+    });
+
+    // Display the time zone name and current time
+    listItem.innerHTML = '<span class="timezone-name">' + selectedTimeZone + '</span>';
+    listItem.appendChild(removeButton);
+
+    // Add the new time zone to the list
+    document.getElementById('additional-timezone-list').appendChild(listItem);
+
+    // Draw the analog clock for the additional time zone
+    createTimeZoneClock(selectedTimeZone);
+    updateAdditionalClocks();
+
+    // Create a new canvas for the added time zone
+    var canvasId = 'additional-clock-canvas-' + (existingTimeZones.length - 1);
+    var canvas = document.createElement('canvas');
+    canvas.id = canvasId;
+    canvas.width = 200;
+    canvas.height = 200;
+
+    // Add the canvas to the additional clocks div
+    document.getElementById('additional-clocks').appendChild(canvas);
+
+    // Call the function to update all additional clocks
+    updateAdditionalClocks();
 }
 
 // Handle real-time updates for both the main clock and the additional clock
