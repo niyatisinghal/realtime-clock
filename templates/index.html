@@ -63,20 +63,41 @@
                     <p id="current-time-main" class="lead text-center"></p>
                 </div>
 
-                <!-- Time Zone Selector Section -->
-                <div class="card p-4">
+                 <!-- Time Zone Selector Section -->
+                 <div class="card p-4 mb-4">
                     <h1 class="text-center mb-4">Real-Time Clock</h1>
                     <div class="form-group">
                         <label for="timezone">Select Time Zone:</label>
-                        <select id="timezone" class="form-control" onchange="changeTimeZone()">
+                        <select id="timezone" class="form-control">
                             <!-- Time zone options populated dynamically -->
+                            {% for tz in timezones %}
+                                <option value="{{ tz }}">{{ tz }}</option>
+                            {% endfor %}
                         </select>
+                        <button onclick="addSelectedTimeZone()" class="btn btn-primary mt-2">Add</button>
                     </div>
                     <p id="current-time" class="lead text-center"></p>
+
+                    <!-- Additional Time Zones List -->
+                    <div class="mt-3">
+                        <label for="additional-timezone">Additional Time Zones:</label>
+                        <ul id="additional-timezone-list" class="list-group mt-2">
+                            <!-- Additional time zones will be dynamically added here -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Additional Clock Section -->
+                <div class="card p-4">
+                    <h1 class="text-center mb-4">Additional Clock</h1>
+                    <div id="additional-clock" class="text-center mt-4">
+                        <!-- Additional clocks will be dynamically added here -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
 
+    <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
 </html>

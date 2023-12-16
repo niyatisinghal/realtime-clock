@@ -3,26 +3,18 @@ var socket = io.connect(window.location.origin);
 
 socket.on('update_time', function(data) {
     document.getElementById('current-time').innerHTML = data.current_time;
-    updateClock(data.current_time);
+    updateClock(data.current_time, 'clock-canvas');
 });
 
-var stopwatchRunning = false;
-var stopwatchInterval;
-var stopwatchStartTime;
-
-function changeTimeZone() {
-    var selectedTimeZone = document.getElementById('timezone').value;
-    socket.emit('change_timezone', {'timezone': selectedTimeZone});
-}
-
-function updateClock(currentTime) {
+// Analog Clock
+function updateClock(currentTime, canvasId) {
     var selectedTimeZone = document.getElementById('timezone').value;
     var formattedTime = moment.tz(currentTime, selectedTimeZone);
-    drawAnalogClock(formattedTime);
+    drawAnalogClock(formattedTime, canvasId);
 }
 
-function drawAnalogClock(time) {
-    var canvas = document.getElementById('clock-canvas');
+function drawAnalogClock(time, canvasId) {
+    var canvas = document.getElementById(canvasId);
     var context = canvas.getContext('2d');
     var centerX = canvas.width / 2;
     var centerY = canvas.height / 2;
@@ -74,57 +66,7 @@ function drawClockHand(context, centerX, centerY, degrees, length, width, color)
     context.closePath();
 }
 
-setInterval(function() {
-    var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    document.getElementById('current-time').innerHTML = currentTime;
-    updateClock(currentTime);
-}, 1000);
-
-var stopwatchRunning = false;
-var stopwatchInterval;
-var stopwatchStartTime;
-
-function startStopwatch() {
-    if (!stopwatchRunning) {
-        stopwatchStartTime = new Date().getTime();
-        stopwatchInterval = setInterval(updateStopwatch, 1000);
-        stopwatchRunning = true;
-    }
-}
-
-function stopStopwatch() {
-    clearInterval(stopwatchInterval);
-    stopwatchRunning = false;
-}
-
-function resetStopwatch() {
-    stopStopwatch();
-    updateStopwatchDisplay(0);
-}
-
-function updateStopwatch() {
-    var currentTime = new Date().getTime();
-    var elapsedMilliseconds = currentTime - stopwatchStartTime;
-    var elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
-    updateStopwatchDisplay(elapsedSeconds);
-}
-
-function updateStopwatchDisplay(seconds) {
-    var hours = Math.floor(seconds / 3600);
-    var minutes = Math.floor((seconds % 3600) / 60);
-    var remainingSeconds = seconds % 60;
-
-    var displayString = formatTimeComponent(hours) + ":" +
-                        formatTimeComponent(minutes) + ":" +
-                        formatTimeComponent(remainingSeconds);
-
-    document.getElementById('stopwatch-display').innerHTML = displayString;
-}
-
-function formatTimeComponent(component) {
-    return component < 10 ? "0" + component : component;
-}
-
+// Timer
 var timerRunning = false;
 var timerInterval;
 var timerEndTime;
@@ -179,3 +121,87 @@ function updateTimerDisplay(seconds) {
     document.getElementById('timer-display').innerHTML = displayString;
 }
 
+// Stopwatch
+var stopwatchRunning = false;
+var stopwatchInterval;
+var stopwatchStartTime;
+
+function startStopwatch() {
+    if (!stopwatchRunning) {
+        stopwatchStartTime = new Date().getTime();
+        stopwatchInterval = setInterval(updateStopwatch, 1000);
+        stopwatchRunning = true;
+    }
+}
+
+function stopStopwatch() {
+    clearInterval(stopwatchInterval);
+    stopwatchRunning = false;
+}
+
+function resetStopwatch() {
+    stopStopwatch();
+    updateStopwatchDisplay(0);
+}
+
+function updateStopwatch() {
+    var currentTime = new Date().getTime();
+    var elapsedMilliseconds = currentTime - stopwatchStartTime;
+    var elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+    updateStopwatchDisplay(elapsedSeconds);
+}
+
+function updateStopwatchDisplay(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = seconds % 60;
+
+    var displayString = formatTimeComponent(hours) + ":" +
+                        formatTimeComponent(minutes) + ":" +
+                        formatTimeComponent(remainingSeconds);
+
+    document.getElementById('stopwatch-display').innerHTML = displayString;
+}
+
+function formatTimeComponent(component) {
+    return component < 10 ? "0" + component : component;
+}
+
+// Time zone change event
+function changeTimeZone() {
+    var selectedTimeZone = document.getElementById('timezone').value;
+
+    // Update the main clock
+    var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById('current-time-main').innerHTML = currentTime;
+    updateClock(currentTime, 'clock-canvas');
+
+    // Create or update the clock for the selected time zone
+    createTimeZoneClock(selectedTimeZone);
+
+    // Draw analog clock for the additional clock
+    var additionalCurrentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
+    drawAnalogClock(moment.tz(additionalCurrentTime, selectedTimeZone), 'additional-clock-canvas');
+}
+
+// Function to create an additional clock for a specific time zone
+function createTimeZoneClock(timeZone) {
+    var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById('additional-clock').innerHTML = `Time in ${timeZone}: ${currentTime}`;
+    drawAnalogClock(moment.tz(currentTime, timeZone), 'additional-clock-canvas');
+}
+
+// Handle real-time updates for both the main clock and the additional clock
+setInterval(function() {
+    var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById('current-time-main').innerHTML = currentTime;
+    updateClock(currentTime, 'clock-canvas');
+}, 1000);
+
+// Add a setInterval for the additional clock (customize as needed)
+setInterval(function() {
+    var selectedTimeZone = document.getElementById('timezone').value;
+    var currentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
+    drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
+}, 1000);
