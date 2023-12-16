@@ -124,3 +124,58 @@ function updateStopwatchDisplay(seconds) {
 function formatTimeComponent(component) {
     return component < 10 ? "0" + component : component;
 }
+
+var timerRunning = false;
+var timerInterval;
+var timerEndTime;
+
+function startTimer() {
+    if (!timerRunning) {
+        var timerInput = document.getElementById('timer-input').value;
+        if (timerInput && timerInput > 0) {
+            var currentTime = new Date().getTime();
+            timerEndTime = currentTime + timerInput * 1000;
+            timerInterval = setInterval(updateTimer, 1000);
+            timerRunning = true;
+        } else {
+            alert('Please enter a valid timer duration.');
+        }
+    }
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+}
+
+function resetTimer() {
+    stopTimer();
+    updateTimerDisplay(0);
+    document.getElementById('timer-input').value = '';
+}
+
+function updateTimer() {
+    var currentTime = new Date().getTime();
+    var remainingMilliseconds = timerEndTime - currentTime;
+    if (remainingMilliseconds > 0) {
+        var remainingSeconds = Math.floor(remainingMilliseconds / 1000);
+        updateTimerDisplay(remainingSeconds);
+    } else {
+        stopTimer();
+        updateTimerDisplay(0);
+        alert('Timer expired!');
+    }
+}
+
+function updateTimerDisplay(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = seconds % 60;
+
+    var displayString = formatTimeComponent(hours) + ":" +
+                        formatTimeComponent(minutes) + ":" +
+                        formatTimeComponent(remainingSeconds);
+
+    document.getElementById('timer-display').innerHTML = displayString;
+}
+
