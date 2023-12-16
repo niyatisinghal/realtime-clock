@@ -87,7 +87,24 @@
                         </ul>
                     </div>
                 </div>
+
+                <!-- Alarm Section -->
+                <div class="card p-4 mb-4">
+                <h1 class="text-center mb-4">Alarm</h1>
+                <div class="form-group">
+                    <label for="alarm-time">Set Alarm Time:</label>
+                    <input type="datetime-local" id="alarm-time" class="form-control">
+                </div>
+                <button onclick="setAlarm()" class="btn btn-primary mt-2">Set Alarm</button>
+                <button onclick="clearAlarm()" class="btn btn-danger mt-2">Clear Alarm</button>
+                <!-- Display the list of alarms -->
+                <ul id="alarms-list" class="list-group mt-3">
+                    <!-- Alarms will be dynamically added here -->
+                </ul>
+
             </div>
+
+        </div>
 
             <!-- Third Column: Additional Clock -->
             <div class="col-md-4">

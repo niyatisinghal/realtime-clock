@@ -185,6 +185,28 @@ function changeTimeZone() {
     updateAdditionalClocks();
 }
 
+// Alarm
+var alarmTime;
+var alarmInterval;
+
+function setAlarm() {
+    clearAlarm(); // Clear any existing alarms
+    alarmTime = new Date(document.getElementById('alarm-time').value).getTime();
+    alarmInterval = setInterval(checkAlarm, 1000);
+}
+
+function clearAlarm() {
+    clearInterval(alarmInterval);
+}
+
+function checkAlarm() {
+    var currentTime = new Date().getTime();
+    if (currentTime >= alarmTime) {
+        alert('Alarm! It\'s time!');
+        clearAlarm();
+    }
+}
+
 // Updated function to create an additional clock for a specific time zone
 function createTimeZoneClock(timeZone, index) {
     var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
