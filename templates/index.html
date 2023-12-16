@@ -18,78 +18,65 @@
 <body class="bg-light">
     <div class="container mt-5">
         <div class="row">
-            <!-- Left Side: Analog Clock -->
+            <!-- Left Side: Analog Clock, Timer, and Stopwatch -->
             <div class="col-md-6">
-                <div class="card p-4">
+                <!-- Analog Clock Section -->
+                <div class="card p-4 mb-4">
                     <h1 class="text-center mb-4">Analog Clock</h1>
                     <div id="analog-clock" class="text-center mt-4">
                         <canvas id="clock-canvas" width="200" height="200"></canvas>
                     </div>
                 </div>
+
+                <!-- Timer Section -->
+                <div class="card p-4 mb-4">
+                    <h1 class="text-center mb-4">Timer</h1>
+                    <div class="form-group">
+                        <label for="timer-input">Set Timer (seconds):</label>
+                        <input type="number" id="timer-input" class="form-control" placeholder="Enter seconds">
+                    </div>
+                    <p id="timer-display" class="lead text-center">00:00:00</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button onclick="startTimer()" class="btn btn-primary">Start</button>
+                        <button onclick="stopTimer()" class="btn btn-danger">Stop</button>
+                        <button onclick="resetTimer()" class="btn btn-secondary">Reset</button>
+                    </div>
+                </div>
+
+                <!-- Stopwatch Section -->
+                <div class="card p-4 mb-4">
+                    <h1 class="text-center mb-4">Stopwatch</h1>
+                    <p id="stopwatch-display" class="lead text-center">00:00:00</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button onclick="startStopwatch()" class="btn btn-primary">Start</button>
+                        <button onclick="stopStopwatch()" class="btn btn-danger">Stop</button>
+                        <button onclick="resetStopwatch()" class="btn btn-secondary">Reset</button>
+                    </div>
+                </div>
             </div>
-            <!-- Right Side: Main Clock -->
+
+            <!-- Right Side: Main Clock and Time Zone Selector -->
             <div class="col-md-6">
-                <div class="card p-4">
+                <!-- Main Clock Section -->
+                <div class="card p-4 mb-4">
                     <h1 class="text-center mb-4">Main Clock</h1>
                     <p id="current-time-main" class="lead text-center"></p>
                 </div>
-            </div>
-        </div>
-        <!-- Bottom Row: Time Zone Selector -->
-        <div class="row">
-            <div class="col-md-12">
+
+                <!-- Time Zone Selector Section -->
                 <div class="card p-4">
                     <h1 class="text-center mb-4">Real-Time Clock</h1>
                     <div class="form-group">
                         <label for="timezone">Select Time Zone:</label>
                         <select id="timezone" class="form-control" onchange="changeTimeZone()">
-                            {% for tz in timezones %}
-                                <option value="{{ tz }}">{{ tz }}</option>
-                            {% endfor %}
+                            <!-- Time zone options populated dynamically -->
                         </select>
                     </div>
                     <p id="current-time" class="lead text-center"></p>
                 </div>
             </div>
         </div>
-
-        <!-- Stopwatch Section -->
-        <div class="row">
-
-<div class="col-md-12">
-    <div class="card p-4">
-        <h1 class="text-center mb-4">Stopwatch</h1>
-        <p id="stopwatch-display" class="lead text-center">00:00:00</p>
-        <div class="text-center">
-            <button onclick="startStopwatch()" class="btn btn-primary mr-2">Start</button>
-            <button onclick="stopStopwatch()" class="btn btn-danger mr-2">Stop</button>
-            <button onclick="resetStopwatch()" class="btn btn-secondary">Reset</button>
-        </div>
-    </div>
-</div>
-        </div>
-
-        <!-- Timer Section -->
-        <div class="row">
-
-<div class="col-md-12">
-    <div class="card p-4">
-        <h1 class="text-center mb-4">Timer</h1>
-        <div class="form-group">
-            <label for="timer-input">Set Timer (seconds):</label>
-            <input type="number" id="timer-input" class="form-control" placeholder="Enter seconds">
-        </div>
-        <p id="timer-display" class="lead text-center">00:00:00</p>
-        <div class="text-center">
-            <button onclick="startTimer()" class="btn btn-primary mr-2">Start</button>
-            <button onclick="stopTimer()" class="btn btn-danger mr-2">Stop</button>
-            <button onclick="resetTimer()" class="btn btn-secondary">Reset</button>
-        </div>
-    </div>
-</div>
-        </div>
-
-        
     </div>
 </body>
+
 </html>
