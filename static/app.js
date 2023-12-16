@@ -1,5 +1,5 @@
 // static/app.js
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+var socket = io.connect(window.location.origin);
 
 socket.on('update_time', function(data) {
     document.getElementById('current-time').innerHTML = data.current_time;
@@ -38,6 +38,19 @@ function drawAnalogClock(time) {
     context.strokeStyle = '#333';
     context.stroke();
     context.closePath();
+
+    // Draw clock numbers
+    for (var i = 1; i <= 12; i++) {
+        var angle = (i * 30 - 60) * Math.PI / 180;
+        var x = centerX + radius * 0.85 * Math.cos(angle);
+        var y = centerY + radius * 0.85 * Math.sin(angle);
+
+        context.font = '20px Arial';
+        context.fillStyle = '#333';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.fillText(i, x, y);
+    }
 
     // Draw clock hands
     drawClockHand(context, centerX, centerY, time.hours() % 12 * 30 + time.minutes() / 2, radius * 0.5, 10, '#333');  // Hour hand
