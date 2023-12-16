@@ -6,7 +6,9 @@ socket.on('update_time', function(data) {
     updateClock(data.current_time);
 });
 
-
+var stopwatchRunning = false;
+var stopwatchInterval;
+var stopwatchStartTime;
 
 function changeTimeZone() {
     var selectedTimeZone = document.getElementById('timezone').value;
@@ -77,3 +79,48 @@ setInterval(function() {
     document.getElementById('current-time').innerHTML = currentTime;
     updateClock(currentTime);
 }, 1000);
+
+var stopwatchRunning = false;
+var stopwatchInterval;
+var stopwatchStartTime;
+
+function startStopwatch() {
+    if (!stopwatchRunning) {
+        stopwatchStartTime = new Date().getTime();
+        stopwatchInterval = setInterval(updateStopwatch, 1000);
+        stopwatchRunning = true;
+    }
+}
+
+function stopStopwatch() {
+    clearInterval(stopwatchInterval);
+    stopwatchRunning = false;
+}
+
+function resetStopwatch() {
+    stopStopwatch();
+    updateStopwatchDisplay(0);
+}
+
+function updateStopwatch() {
+    var currentTime = new Date().getTime();
+    var elapsedMilliseconds = currentTime - stopwatchStartTime;
+    var elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+    updateStopwatchDisplay(elapsedSeconds);
+}
+
+function updateStopwatchDisplay(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = seconds % 60;
+
+    var displayString = formatTimeComponent(hours) + ":" +
+                        formatTimeComponent(minutes) + ":" +
+                        formatTimeComponent(remainingSeconds);
+
+    document.getElementById('stopwatch-display').innerHTML = displayString;
+}
+
+function formatTimeComponent(component) {
+    return component < 10 ? "0" + component : component;
+}

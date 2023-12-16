@@ -53,18 +53,20 @@
             </div>
         </div>
 
+        <!-- Stopwatch Section -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="card p-4">
-                    <h1 class="text-center mb-4">Stopwatch</h1>
-                    <p id="stopwatch" class="lead text-center">00:00:00</p>
-                    <div class="text-center">
-                        <button id="start-stopwatch-btn" class="btn btn-success">Start</button>
-                        <button id="stop-stopwatch-btn" class="btn btn-danger">Stop</button>
-                        <button id="reset-stopwatch-btn" class="btn btn-secondary">Reset</button>
-                    </div>
-                </div>
-            </div>
+
+<div class="col-md-12">
+    <div class="card p-4">
+        <h1 class="text-center mb-4">Stopwatch</h1>
+        <p id="stopwatch-display" class="lead text-center">00:00:00</p>
+        <div class="text-center">
+            <button onclick="startStopwatch()" class="btn btn-primary mr-2">Start</button>
+            <button onclick="stopStopwatch()" class="btn btn-danger mr-2">Stop</button>
+            <button onclick="resetStopwatch()" class="btn btn-secondary">Reset</button>
+        </div>
+    </div>
+</div>
         </div>
         
     </div>
