@@ -185,29 +185,68 @@ function changeTimeZone() {
     updateAdditionalClocks();
 }
 
-// Function to create an additional clock for a specific time zone
+// Updated function to create an additional clock for a specific time zone
 function createTimeZoneClock(timeZone, index) {
     var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
-    
+
+    // Create a unique ID for each additional clock
+    var clockId = 'additional-clock-canvas-' + index;
+
     // Display the time in the additional clock section
     var additionalClockContainer = document.getElementById('additional-clocks');
     var additionalClockDiv = document.createElement('div');
     additionalClockDiv.className = 'additional-clock-item';
+    additionalClockDiv.setAttribute('data-timezone', timeZone); // Set data attribute for easier identification
     additionalClockDiv.innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime;
-    
+
     // Create a canvas for the additional clock
-    var canvasId = 'additional-clock-canvas-' + index;
     var canvas = document.createElement('canvas');
-    canvas.id = canvasId;
+    canvas.id = clockId;
     canvas.width = 200;
     canvas.height = 200;
-    
+
     additionalClockDiv.appendChild(canvas);
     additionalClockContainer.appendChild(additionalClockDiv);
-    
+
     // Draw the analog clock for the additional time zone
-    drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), canvasId);
+    drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), clockId);
 }
+
+// Function to remove a time zone from the list and update display
+// Function to remove a time zone from the list and update display
+function removeTimeZone(timeZone) {
+    // Remove the time zone from the list
+    var listItems = document.getElementById('additional-timezone-list').getElementsByTagName('li');
+    for (var i = 0; i < listItems.length; i++) {
+        if (listItems[i].getAttribute('data-timezone') === timeZone) {
+            listItems[i].remove();
+        }
+    }
+
+    // Remove the corresponding clock from the display
+    var additionalClockContainer = document.getElementById('additional-clocks');
+    var clocks = additionalClockContainer.getElementsByClassName('additional-clock-item');
+    for (var j = 0; j < clocks.length; j++) {
+        if (clocks[j].getAttribute('data-timezone') === timeZone) {
+            // Remove the canvas element
+            var canvas = clocks[j].getElementsByTagName('canvas')[0];
+            if (canvas) {
+                canvas.remove();
+            }
+
+            // Remove the entire clock div
+            clocks[j].remove();
+        }
+    }
+
+    // Redraw remaining clocks
+    updateAdditionalClocks();
+}
+
+    
+    
+
+
 
 function updateAdditionalClocks() {
     var selectedTimeZones = document.getElementById('additional-timezone-list').getElementsByTagName('li');
@@ -215,14 +254,15 @@ function updateAdditionalClocks() {
     for (var i = 0; i < selectedTimeZones.length; i++) {
         var timeZone = selectedTimeZones[i].getAttribute('data-timezone');
         var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
-        
+
         // Update the time in the additional clock section
         selectedTimeZones[i].innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime;
-        
+
         // Draw the analog clock for the additional time zone
         drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), 'additional-clock-canvas-' + i);
     }
 }
+
 
 
 function addSelectedTimeZone() {
