@@ -2,15 +2,69 @@
 
 /* Body */
 body {
-    background-color: #f5f5f5; /* Light gray background */
+    background-color: #f8f8f8; /* Light Grayish White */
+    font-family: 'Georgia', serif; /* Changed font to Georgia */
+    color: #3b3b3b; /* Slightly Darker Gray */
+    line-height: 1.6;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    background-color: #c4aea3; /* Dusty Rose */
+    color: #f2e6da; /* Ivory */
+    padding: 10px 0;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    background-color: #d5cfbf; /* Cadet */
+}
+
+nav a {
+    color: #f2e6da; /* Ivory */
+    padding: 10px 15px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+nav a:hover {
+    background-color: #fbf3f0; /* Light Ivory on hover */
+}
+
+.main-content {
+    padding: 20px 0;
 }
 
 /* Cards */
 .card {
-    background-color: #ecf0f1; /* Light blue-gray background */
-    border-radius: 10px;
+    background-color: #e8e4e1; /* Silver */
+    border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
+    border: 1px solid #d5cfbf; /* Cadet */
+    margin-bottom: 20px;
+    color: #3b3b3b; /* Slightly Darker Gray */
+}
+
+.card-header {
+    background-color: #f2e6da; /* Ivory */
+    border-bottom: 1px solid #d5cfbf; /* Cadet */
+}
+
+.card-title {
+    margin-bottom: 0;
+}
+
+.card-body {
+    padding: 20px;
 }
 
 .card:hover {
@@ -19,23 +73,80 @@ body {
 
 /* Buttons */
 .btn {
-    background-color: #3498db; /* Pastel blue */
-    color: #fff;
+    background-color: #c4aea3; /* Dusty Rose */
+    color: #3b3b3b; /* Light Grayish White */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 10px 15px;
+    margin-right: 5px;
+}
+
+.btn-primary {
+    background-color: #d5cfbf; /* Cadet */
+    color: #3b3b3b; /* Light Grayish White */
+    border: none;
+}
+
+.btn-danger {
+    background-color: #fbf3f0; /* Light Ivory on hover */
+    color: #3b3b3b; /* Light Grayish White */
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #e8e4e1; /* Silver */
+    color: #3b3b3b; /* Light Grayish White */
+    border: none;
 }
 
 .btn:hover {
-    background-color: #2980b9; /* Darker blue on hover */
+    background-color: #d5cfbf; /* Cadet on hover */
+    color: #f8f8f8;
 }
+
+.btn:focus,
+.btn:active {
+    outline: none;
+    box-shadow: none;
+    background-color: #d5cfbf; /* Cadet */
+    color: #3b3b3b; /* Light Grayish White */
+
+}
+
+.btn-primary:focus {
+    background-color: #d5cfbf; /* Cadet */
+    color: #3b3b3b; /* Light Grayish White */
+}
+
+.btn-danger:focus {
+    background-color: #fbf3f0; /* Light Ivory */
+    color: #3b3b3b; /* Light Grayish White */
+}
+
+.btn-secondary:focus {
+    background-color: #e8e4e1; /* Silver */
+    color: #3b3b3b; /* Light Grayish White */
+}
+
+
+
 
 /* Analog Clock Canvas */
 #analog-clock {
-    background-color: #fff; /* White background */
+    background-color: #fbf3f0; /* Light Ivory */
     border-radius: 50%;
     overflow: hidden;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#clock-canvas {
+    max-width: 100%;
+    height: auto;
+    /*border: 1px solid #c4aea3; /* Dusty Rose 
+    border-radius: 5px;*/
 }
 
 /* Timer and Stopwatch Buttons */
@@ -46,17 +157,94 @@ body {
 /* Main Clock and Time Zone Selector */
 #current-time-main,
 #current-time {
-    color: #2c3e50; /* Dark gray text color */
+    color: #3b3b3b; /* Silver */
 }
 
 /* Form Inputs */
 .form-control {
-    background-color: #ecf0f1; /* Light blue-gray background */
-    border: 1px solid #bdc3c7; /* Light border color */
+    background-color: #fbf3f0; /* Light Ivory */
+    border: 1px solid #c4aea3; /* Dusty Rose */
     border-radius: 5px;
     transition: border-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    color: #3b3b3b; /* Slightly Darker Gray */
 }
 
 .form-control:focus {
-    border-color: #3498db; /* Focus color on input */
+    border-color: #d5cfbf; /* Cadet on focus */
 }
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.list-group {
+    margin-top: 20px;
+}
+
+.list-group-item {
+    border: 1px solid #d5cfbf; /* Cadet */
+}
+
+/* Additional Clock Styles */
+.additional-clock-item {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.additional-clock-item canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.timer-display,
+.stopwatch-display {
+    font-size: 24px;
+}
+
+.timer-controls,
+.stopwatch-controls {
+    margin-top: 20px;
+}
+
+#alarms-list {
+    margin-top: 20px;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #c4aea3; /* Dusty Rose */
+    color: #f8f8f8; /* Light Grayish White */
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 767px) {
+    .card {
+        margin: 0;
+    }
+}
+
+::selection {
+    background-color: #f2e6da; /* Light Ivory */
+    color: #3b3b3b; /* Slightly Darker Gray */
+}
+
+/* Alerts */
+.alert,
+.alert-primary {
+    color: #3b3b3b !important; /* Slightly Darker Gray */
+    background-color: #f2e6da !important; /* Light Ivory */
+    border-color: #c4aea3 !important; /* Cadet */
+}
+
+.alert-primary {
+    color: #fff !important; /* White */
+    background-color: #e1d1a6 !important; /* Light Crayola */
+    border-color: #d5cfbf !important; /* Warm Gray */
+}
+
+

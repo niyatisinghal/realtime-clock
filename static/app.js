@@ -35,9 +35,10 @@ function drawAnalogClock(time, canvasId) {
 
     // Draw clock numbers
     for (var i = 1; i <= 12; i++) {
-        var angle = (i * 30 - 60) * Math.PI / 180;
-        var x = centerX + radius * 0.85 * Math.cos(angle);
-        var y = centerY + radius * 0.85 * Math.sin(angle);
+        var angle = (i * 30 ) * Math.PI / 180;
+        var x = centerX + radius * 0.9 * Math.cos(angle - Math.PI / 2);
+        var y = centerY + radius * 0.9 * Math.sin(angle - Math.PI / 2);
+
 
         context.font = '20px Arial';
         context.fillStyle = '#333';
@@ -186,26 +187,107 @@ function changeTimeZone() {
 }
 
 // Alarm
-var alarmTime;
+var alarms = []; // Updated variable to store alarms
 var alarmInterval;
 
 function setAlarm() {
     clearAlarm(); // Clear any existing alarms
-    alarmTime = new Date(document.getElementById('alarm-time').value).getTime();
-    alarmInterval = setInterval(checkAlarm, 1000);
+    var alarmTimeInput = document.getElementById('alarm-time');
+    
+    // Check if a valid date and time is selected
+    if (alarmTimeInput.value) {
+        var alarmTime = new Date(alarmTimeInput.value).getTime();
+        alarms.push(alarmTime); // Store the alarm time in the alarms array
+        updateAlarmList(); // Display the alarm in the list
+
+        // Check alarms every second only if there are alarms
+        if (alarms.length > 0 && !alarmInterval) {
+            alarmInterval = setInterval(checkAlarms, 1000);
+        }
+        } else {
+            alert('Please select a valid alarm time.');
+        }
+        console.log('Alarms:', alarms);
+
 }
 
 function clearAlarm() {
     clearInterval(alarmInterval);
+    alarms = [];
+    updateAlarmList();
 }
 
-function checkAlarm() {
+function checkAlarms() {
     var currentTime = new Date().getTime();
-    if (currentTime >= alarmTime) {
-        alert('Alarm! It\'s time!');
-        clearAlarm();
+    console.log('Checking alarms...');
+
+
+    // Check each alarm in the list
+    alarms.forEach(function (alarmTime) {
+        if (currentTime >= alarmTime) {
+            alert('Alarm! It\'s time!');
+        }
+    });
+
+    // Remove triggered alarms from the array
+    alarms = alarms.filter(function (alarmTime) {
+        return currentTime < alarmTime;
+    });
+
+    // Update the displayed list of alarms
+    updateAlarmList();
+
+    // If no more alarms, clear the interval
+    if (alarms.length === 0) {
+        clearInterval(alarmInterval);
+        alarmInterval = null;
     }
 }
+
+
+
+
+// Function to add a new alarm
+function addAlarm() {
+    var alarmTimeInput = document.getElementById('alarm-time');
+
+    // Check if a valid date and time is selected
+    if (alarmTimeInput.value) {
+        var alarmTime = new Date(alarmTimeInput.value).getTime();
+        
+        // Store the alarm time in the alarms array
+        alarms.push(alarmTime);
+
+        // Display the alarm in the list
+        updateAlarmList();
+
+        // Clear the input field
+        alarmTimeInput.value = '';
+    } else {
+        alert('Please select a valid alarm time.');
+    }
+}
+
+// Function to clear all alarms
+function clearAllAlarms() {
+    alarms = [];
+    updateAlarmList();
+}
+
+// Function to update the alarm list in the HTML
+function updateAlarmList() {
+    var alarmsList = document.getElementById('alarms-list');
+    alarmsList.innerHTML = '';
+
+    alarms.forEach(function(alarmTime, index) {
+        var listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.innerHTML = '<strong>Alarm ' + (index + 1) + ':</strong> ' + moment(alarmTime).format('MMMM Do YYYY, h:mm:ss a');
+        alarmsList.appendChild(listItem);
+    });
+}
+
+
 
 // Updated function to create an additional clock for a specific time zone
 function createTimeZoneClock(timeZone, index) {
@@ -342,6 +424,7 @@ setInterval(function() {
     var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
     document.getElementById('current-time-main').innerHTML = currentTime;
     updateClock(currentTime, 'clock-canvas');
+    //updateAdditionalClocks();
 }, 1000);
 
 // Add a setInterval for the additional clock (customize as needed)
@@ -351,3 +434,42 @@ setInterval(function() {
     document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
     drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
 }, 1000);
+
+// Add a setInterval for the additional clock (customize as needed)
+setInterval(function() {
+    var selectedTimeZone = document.getElementById('timezone').value;
+    var currentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
+    drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
+}, 1000);
+
+/* Event listener for the "+" button to add alarms
+document.getElementById('add-alarm-btn').addEventListener('click', function() {
+    addAlarmPicker();
+});
+
+function addAlarmPicker() {
+    var alarmContainer = document.getElementById('alarms-container');
+
+    // Create a new date and time picker input
+    var newAlarmPicker = document.createElement('input');
+    newAlarmPicker.type = 'datetime-local';
+    newAlarmPicker.className = 'form-control alarm-picker';
+
+    // Add a remove button for each alarm
+    var removeButton = document.createElement('button');
+    removeButton.textContent = 'Remove';
+    removeButton.className = 'btn btn-danger btn-sm float-right';
+    removeButton.addEventListener('click', function() {
+        alarmContainer.removeChild(alarmItem);
+    });
+
+    // Create a container for each alarm with the picker and remove button
+    var alarmItem = document.createElement('div');
+    alarmItem.className = 'alarm-item';
+    alarmItem.appendChild(newAlarmPicker);
+    alarmItem.appendChild(removeButton);
+
+    // Append the new alarm item to the container
+    alarmContainer.appendChild(alarmItem);
+}*/
