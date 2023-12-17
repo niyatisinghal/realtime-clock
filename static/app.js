@@ -392,6 +392,7 @@ function addSelectedTimeZone() {
     removeButton.innerHTML = 'Remove';
     removeButton.addEventListener('click', function() {
         listItem.remove();
+        removeTimeZone(selectedTimeZone); // Remove corresponding clock when removing the time zone
     });
 
     // Display the time zone name and current time
@@ -403,7 +404,7 @@ function addSelectedTimeZone() {
 
     // Draw the analog clock for the additional time zone
     createTimeZoneClock(selectedTimeZone);
-    updateAdditionalClocks();
+    //updateAdditionalClocks();
 
     // Create a new canvas for the added time zone
     var canvasId = 'additional-clock-canvas-' + (existingTimeZones.length - 1);
@@ -431,7 +432,7 @@ setInterval(function() {
 setInterval(function() {
     var selectedTimeZone = document.getElementById('timezone').value;
     var currentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
-    document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
+    //document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
     drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
 }, 1000);
 
