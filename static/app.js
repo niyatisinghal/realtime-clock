@@ -290,8 +290,9 @@ function updateAlarmList() {
 
 
 // Updated function to create an additional clock for a specific time zone
+// Updated function to create an additional clock for a specific time zone
 function createTimeZoneClock(timeZone, index) {
-    var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
+    var currentTime = moment.tz(moment(), timeZone);
 
     // Create a unique ID for each additional clock
     var clockId = 'additional-clock-canvas-' + index;
@@ -301,7 +302,7 @@ function createTimeZoneClock(timeZone, index) {
     var additionalClockDiv = document.createElement('div');
     additionalClockDiv.className = 'additional-clock-item';
     additionalClockDiv.setAttribute('data-timezone', timeZone); // Set data attribute for easier identification
-    additionalClockDiv.innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime;
+    additionalClockDiv.innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime.format('YYYY-MM-DD HH:mm:ss');
 
     // Create a canvas for the additional clock
     var canvas = document.createElement('canvas');
@@ -309,12 +310,26 @@ function createTimeZoneClock(timeZone, index) {
     canvas.width = 200;
     canvas.height = 200;
 
+    // Add the remove button for each additional clock
+    var removeButton = document.createElement('button');
+    removeButton.className = 'btn btn-danger btn-sm float-right';
+    removeButton.innerHTML = 'Remove';
+    removeButton.addEventListener('click', function() {
+        additionalClockDiv.remove();
+        removeTimeZone(timeZone); // Remove corresponding clock when removing the time zone
+    });
+
+    // Append the remove button to the additional clock div
+    additionalClockDiv.appendChild(removeButton);
+
+    // Append the canvas to the additional clock div
     additionalClockDiv.appendChild(canvas);
     additionalClockContainer.appendChild(additionalClockDiv);
 
     // Draw the analog clock for the additional time zone
-    drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), clockId);
+    drawAnalogClockForTimeZone(currentTime, clockId);
 }
+
 
 // Function to remove a time zone from the list and update display
 // Function to remove a time zone from the list and update display
@@ -347,11 +362,6 @@ function removeTimeZone(timeZone) {
     updateAdditionalClocks();
 }
 
-    
-    
-
-
-
 function updateAdditionalClocks() {
     var selectedTimeZones = document.getElementById('additional-timezone-list').getElementsByTagName('li');
 
@@ -364,6 +374,28 @@ function updateAdditionalClocks() {
 
         // Draw the analog clock for the additional time zone
         drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), 'additional-clock-canvas-' + i);
+    }
+}
+
+    
+
+
+
+// Function to update the time for a specific time zone
+function updateAdditionalClock(timeZone, elementId) {
+    var currentTime = moment.tz(moment(), timeZone).format('YYYY-MM-DD HH:mm:ss');
+    document.getElementById(elementId).innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime;
+    drawAnalogClockForTimeZone(moment.tz(currentTime, timeZone), elementId);
+}
+
+// Function to update all additional clocks
+function updateAllAdditionalClocks() {
+    var selectedTimeZones = document.getElementById('additional-timezone-list').getElementsByTagName('li');
+
+    for (var i = 0; i < selectedTimeZones.length; i++) {
+        var timeZone = selectedTimeZones[i].getAttribute('data-timezone');
+        var elementId = 'additional-clock-canvas-' + i;
+        updateAdditionalClock(timeZone, elementId);
     }
 }
 
@@ -431,18 +463,20 @@ setInterval(function() {
 // Add a setInterval for the additional clock (customize as needed)
 setInterval(function() {
     var selectedTimeZone = document.getElementById('timezone').value;
+    console.log('Selected Time Zone:', selectedTimeZone);
+
     var currentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
+    console.log('Current Time in Selected Time Zone:', currentTime);
+    
     //document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
     drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
 }, 1000);
 
-// Add a setInterval for the additional clock (customize as needed)
+// Add a setInterval for updating additional clocks
 setInterval(function() {
-    var selectedTimeZone = document.getElementById('timezone').value;
-    var currentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
-    document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
-    drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
+    updateAllAdditionalClocks();
 }, 1000);
+
 
 /* Event listener for the "+" button to add alarms
 document.getElementById('add-alarm-btn').addEventListener('click', function() {
