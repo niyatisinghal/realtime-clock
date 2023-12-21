@@ -1,8 +1,8 @@
 // static/app.js
+
 var socket = io.connect(window.location.origin);
 
 socket.on('update_time', function(data) {
-    document.getElementById('current-time').innerHTML = data.current_time;
     updateClock(data.current_time, 'clock-canvas');
 });
 
@@ -196,7 +196,9 @@ function setAlarm() {
     
     // Check if a valid date and time is selected
     if (alarmTimeInput.value) {
-        var alarmTime = new Date(alarmTimeInput.value).getTime();
+        var userSelectedTime = new Date(alarmTimeInput.value);
+        var alarmTime = moment(userSelectedTime).format('YYYY-MM-DD HH:mm:ss');
+
         alarms.push(alarmTime); // Store the alarm time in the alarms array
         updateAlarmList(); // Display the alarm in the list
 
@@ -216,16 +218,19 @@ function clearAlarm() {
     alarms = [];
     updateAlarmList();
 }
-
 function checkAlarms() {
+    var alarmMessageElement = document.getElementById('alarm-message');
+    if (alarmMessageElement) {
+        alarmMessageElement.innerHTML = 'Alarm! It\'s time!';
+    }
     var currentTime = new Date().getTime();
     console.log('Checking alarms...');
 
-
     // Check each alarm in the list
     alarms.forEach(function (alarmTime) {
+        var formattedAlarmTime = moment(alarmTime).format('YYYY-MM-DD HH:mm:ss');
         if (currentTime >= alarmTime) {
-            alert('Alarm! It\'s time!');
+            document.getElementById('alarm-message').innerHTML = 'Alarm! It\'s time: ' + formattedAlarmTime;
         }
     });
 
@@ -243,9 +248,6 @@ function checkAlarms() {
         alarmInterval = null;
     }
 }
-
-
-
 
 // Function to add a new alarm
 function addAlarm() {
@@ -282,14 +284,13 @@ function updateAlarmList() {
     alarms.forEach(function(alarmTime, index) {
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
-        listItem.innerHTML = '<strong>Alarm ' + (index + 1) + ':</strong> ' + moment(alarmTime).format('MMMM Do YYYY, h:mm:ss a');
+        listItem.innerHTML = '<strong>Alarm ' + (index + 1) + ':</strong> ' + moment(alarmTime).format('YYYY-MM-DD HH:mm:ss');
         alarmsList.appendChild(listItem);
     });
 }
 
 
 
-// Updated function to create an additional clock for a specific time zone
 // Updated function to create an additional clock for a specific time zone
 function createTimeZoneClock(timeZone, index) {
     var currentTime = moment.tz(moment(), timeZone);
@@ -301,7 +302,7 @@ function createTimeZoneClock(timeZone, index) {
     var additionalClockContainer = document.getElementById('additional-clocks');
     var additionalClockDiv = document.createElement('div');
     additionalClockDiv.className = 'additional-clock-item';
-    additionalClockDiv.setAttribute('data-timezone', timeZone); // Set data attribute for easier identification
+    additionalClockDiv.setAttribute('data-timezone', timeZone); 
     additionalClockDiv.innerHTML = '<span class="timezone-name">' + timeZone + '</span>: ' + currentTime.format('YYYY-MM-DD HH:mm:ss');
 
     // Create a canvas for the additional clock
@@ -316,7 +317,7 @@ function createTimeZoneClock(timeZone, index) {
     removeButton.innerHTML = 'Remove';
     removeButton.addEventListener('click', function() {
         additionalClockDiv.remove();
-        removeTimeZone(timeZone); // Remove corresponding clock when removing the time zone
+        removeTimeZone(timeZone); 
     });
 
     // Append the remove button to the additional clock div
@@ -331,7 +332,6 @@ function createTimeZoneClock(timeZone, index) {
 }
 
 
-// Function to remove a time zone from the list and update display
 // Function to remove a time zone from the list and update display
 function removeTimeZone(timeZone) {
     // Remove the time zone from the list
@@ -451,8 +451,8 @@ function addSelectedTimeZone() {
     removeButton.innerHTML = 'Remove';
     removeButton.addEventListener('click', function() {
         listItem.remove();
-        removeTimeZone(selectedTimeZone); // Remove corresponding clock when removing the time zone
-        updateTimesInList(); // Update times after removing
+        removeTimeZone(selectedTimeZone); 
+        updateTimesInList(); 
 
     });
 
@@ -466,7 +466,7 @@ function addSelectedTimeZone() {
 
     // Draw the analog clock for the additional time zone
     createTimeZoneClock(selectedTimeZone);
-    //updateAdditionalClocks();
+    updateAdditionalClocks();
 
     // Create a new canvas for the added time zone
     var canvasId = 'additional-clock-canvas-' + (existingTimeZones.length - 1);
@@ -504,23 +504,21 @@ function updateTimesInList() {
 }
 
 
-// Handle real-time updates for both the main clock and the additional clock
+// Handle real-time updates for the main clock 
 setInterval(function() {
     var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
     document.getElementById('current-time-main').innerHTML = currentTime;
     updateClock(currentTime, 'clock-canvas');
-    //updateAdditionalClocks();
 }, 1000);
 
 setInterval(function() {
     var currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    document.getElementById('current-time').innerHTML = currentTime;
+    document.getElementById('current-time-main').innerHTML = currentTime;
     updateClock(currentTime, 'clock-canvas');
-    //updateAdditionalClocks();
 }, 1000);
 
 
-// Add a setInterval for the additional clock (customize as needed)
+// setInterval for the additional clock 
 setInterval(function() {
     var selectedTimeZone = document.getElementById('timezone').value;
     console.log('Selected Time Zone:', selectedTimeZone);
@@ -528,7 +526,6 @@ setInterval(function() {
     var currentTime = moment.tz(moment(), selectedTimeZone).format('YYYY-MM-DD HH:mm:ss');
     console.log('Current Time in Selected Time Zone:', currentTime);
     
-    //document.getElementById('additional-clock').innerHTML = `Time in ${selectedTimeZone}: ${currentTime}`;
     drawAnalogClock(moment.tz(currentTime, selectedTimeZone), 'additional-clock-canvas');
 }, 1000);
 
@@ -547,37 +544,3 @@ setInterval(function() {
     updateAdditionalClocksDisplay();
 }, 1000);
 
-
-
-
-
-/* Event listener for the "+" button to add alarms
-document.getElementById('add-alarm-btn').addEventListener('click', function() {
-    addAlarmPicker();
-});
-
-function addAlarmPicker() {
-    var alarmContainer = document.getElementById('alarms-container');
-
-    // Create a new date and time picker input
-    var newAlarmPicker = document.createElement('input');
-    newAlarmPicker.type = 'datetime-local';
-    newAlarmPicker.className = 'form-control alarm-picker';
-
-    // Add a remove button for each alarm
-    var removeButton = document.createElement('button');
-    removeButton.textContent = 'Remove';
-    removeButton.className = 'btn btn-danger btn-sm float-right';
-    removeButton.addEventListener('click', function() {
-        alarmContainer.removeChild(alarmItem);
-    });
-
-    // Create a container for each alarm with the picker and remove button
-    var alarmItem = document.createElement('div');
-    alarmItem.className = 'alarm-item';
-    alarmItem.appendChild(newAlarmPicker);
-    alarmItem.appendChild(removeButton);
-
-    // Append the new alarm item to the container
-    alarmContainer.appendChild(alarmItem);
-}*/

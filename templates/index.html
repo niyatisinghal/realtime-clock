@@ -13,10 +13,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone.min.js"></script>
-    <!-- Moment.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<!-- Moment-timezone.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.min.js"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </head>
@@ -36,7 +32,6 @@
                 <!-- Timer Section -->
                 <div class="card p-4 mb-4">
                     <h1 class="text-center mb-4">Timer</h1>
-                    <!-- ... (unchanged) ... -->
                     <div class="form-group">
                         <label for="timer-input">Set Timer (seconds):</label>
                         <input type="number" id="timer-input" class="form-control" placeholder="Enter seconds">
@@ -52,7 +47,6 @@
                 <!-- Stopwatch Section -->
                 <div class="card p-4 mb-4">
                     <h1 class="text-center mb-4">Stopwatch</h1>
-                    <!-- ... (unchanged) ... -->
                     <p id="stopwatch-display" class="lead text-center">00:00:00</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <button onclick="startStopwatch()" class="btn btn-primary">Start</button>
@@ -83,7 +77,6 @@
                         </select>
                         <button onclick="addSelectedTimeZone()" class="btn btn-primary mt-2">Add</button>
                     </div>
-                    <p id="current-time" class="lead text-center"></p>
                     <!-- Additional Time Zones List -->
                     <div class="mt-3">
                         <label for="additional-timezone">Additional Time Zones:</label>
@@ -101,11 +94,14 @@
                     <input type="datetime-local" id="alarm-time" class="form-control">
                 </div>
                 <button onclick="addAlarm()" class="btn btn-primary mt-2">Add Alarms</button>
-                <button onclick="clearAllAlarm()" class="btn btn-danger mt-2">Clear All Alarm</button>
+                <button onclick="clearAllAlarms()" class="btn btn-danger mt-2">Clear All Alarm</button>
                 <!-- Display the list of alarms -->
                 <ul id="alarms-list" class="list-group mt-3">
                     <!-- Alarms will be dynamically added here -->
                 </ul>
+                    <!-- Display alarm message -->
+    <div id="alarm-message" class="mt-2"></div>
+
 
             </div>
 

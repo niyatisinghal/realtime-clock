@@ -1,9 +1,8 @@
 /* styles.css */
 
-/* Body */
 body {
     background-color: #f8f8f8; /* Light Grayish White */
-    font-family: 'Georgia', serif; /* Changed font to Georgia */
+    font-family: 'Georgia', serif; 
     color: #3b3b3b; /* Slightly Darker Gray */
     line-height: 1.6;
     margin: 0;
@@ -36,7 +35,7 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #fbf3f0; /* Light Ivory on hover */
+    background-color: #fbf3f0; /* Light Ivory*/
 }
 
 .main-content {
@@ -90,7 +89,7 @@ nav a:hover {
 }
 
 .btn-danger {
-    background-color: #fbf3f0; /* Light Ivory on hover */
+    background-color: #fbf3f0; /* Light Ivory*/
     color: #3b3b3b; /* Light Grayish White */
     border: none;
 }
@@ -102,7 +101,7 @@ nav a:hover {
 }
 
 .btn:hover {
-    background-color: #d5cfbf; /* Cadet on hover */
+    background-color: #d5cfbf; /* Cadet */
     color: #f8f8f8;
 }
 
@@ -145,13 +144,11 @@ nav a:hover {
 #clock-canvas {
     max-width: 100%;
     height: auto;
-    /*border: 1px solid #c4aea3; /* Dusty Rose 
-    border-radius: 5px;*/
 }
 
 /* Timer and Stopwatch Buttons */
 .d-flex button {
-    margin: 0; /* Remove default button margin */
+    margin: 0; 
 }
 
 /* Main Clock and Time Zone Selector */
